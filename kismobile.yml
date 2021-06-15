@@ -1,0 +1,60 @@
+---
+
+- hosts: kismobile
+
+  tasks:
+
+  - name: Install Kismet Repo Key 
+    ansible.builtin.apt_key:
+      url: https://www.kismetwireless.net/repos/kismet-release.gpg.key 
+      state: present
+
+  - name: Install Kismet Repo
+    ansible.builtin.apt_repository:
+      repo: deb https://www.kismetwireless.net/repos/apt/git/buster buster main 
+      state: present
+
+  - name: Install packages
+    apt:
+      name: ['python3','htop','vim','tmux','kismet','gpsd','gpsd-clients']
+      state: present
+
+  - name: Create Systemd service
+    copy:
+      src: files/kismet.service
+      dest: /usr/lib/systemd/system/kismet.service
+      owner: root
+      group: root
+      mode: 0744
+
+  - name: add pi user to kismet group
+    ansible.builtin.user:
+      append: yes
+      name: pi
+      groups: kismet
+
+  - name: Copy kismet_site.conf
+    copy:
+      src: files/kismet_site.conf
+      dest: /etc/kismet/kismet_site.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Copy GPSD defaults
+    copy:
+      src: files/gpsd
+      dest: /etc/default/gpsd
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: enable kismet service at boot
+    service:
+      name: kismet
+      enabled: yes
+
+  - name: enable gpsd service at boot
+    service:
+      name: gpsd
+      enabled: yes
