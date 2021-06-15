@@ -19,7 +19,7 @@
       name: ['python3','htop','vim','tmux','kismet','gpsd','gpsd-clients']
       state: present
 
-  - name: Create Systemd service
+  - name: Create Kismet Systemd service
     copy:
       src: files/kismet.service
       dest: /usr/lib/systemd/system/kismet.service
@@ -52,9 +52,4 @@
   - name: enable kismet service at boot
     service:
       name: kismet
-      enabled: yes
-
-  - name: enable gpsd service at boot
-    service:
-      name: gpsd
       enabled: yes

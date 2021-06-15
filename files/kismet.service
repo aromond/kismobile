@@ -1,7 +1,7 @@
 [Unit]
 Description=Kismet
 ConditionPathExists=/usr/bin/kismet
-After=network.target auditd.service
+After=network.target auditd.service gpsd.service
 
 [Service]
 User=pi
