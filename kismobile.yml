@@ -8,6 +8,7 @@
     ansible.builtin.apt_key:
       url: https://www.kismetwireless.net/repos/kismet-release.gpg.key 
       state: present
+    throttle: 3
 
   - name: Install Kismet Repo
     ansible.builtin.apt_repository:
@@ -16,7 +17,13 @@
 
   - name: Install packages
     apt:
-      name: ['python3','htop','vim','tmux','kismet','gpsd','gpsd-clients']
+      name: ['git','python3','python3-pip','python3-pil','python3-numpy','htop','vim','tmux','kismet','gpsd','gpsd-clients','rtl-sdr']
+      state: present
+
+  - name: Install pip packages
+    pip:
+      executable: pip3
+      name: ['RPi.GPIO','spidev','requests']
       state: present
 
   - name: Create Kismet Systemd service
@@ -52,4 +59,4 @@
   - name: enable kismet service at boot
     service:
       name: kismet
-      enabled: yes
+      enabled: no
